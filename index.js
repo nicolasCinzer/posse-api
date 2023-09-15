@@ -1,8 +1,13 @@
 import express from 'express'
+import { getExercises, addExercises, updateExercise } from './routes/exercises/exercises.js'
+
 const app = express()
 
-app.get('/', (req, res) => {})
+app.get('/exercises', getExercises)
+app.get('/exercises/add', addExercises)
+app.get('/exercises/update', updateExercise)
 
-app.listen(8080, () => {
-  console.log('Server listening on port 8080')
+const PORT = 8080
+app.listen(PORT, () => {
+  console.log(`Server listening on port http://localhost:${PORT}`)
 })
