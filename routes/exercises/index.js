@@ -1,3 +1,11 @@
-import { getExercises, addExercises, updateExercise } from './exercises'
+import {
+  getExercises,
+  getExerciseById,
+  getExercisesByAttributes,
+  addExercises,
+  updateExercise,
+  deleteExercise,
+  deleteExerciseById
+} from './exercises.js'
 
-export { getExercises, addExercises, updateExercise }
+export { getExercises, getExerciseById, getExercisesByAttributes, addExercises, updateExercise, deleteExercise, deleteExerciseById }
