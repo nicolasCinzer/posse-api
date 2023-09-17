@@ -1,4 +1,7 @@
+import fs from 'node:fs/promises'
 import exercisesData from '../data/exercises.json' assert { type: 'json' }
+
+import { matchAttributes } from '../utils/index.js'
 
 class Exercises {
   constructor() {
@@ -14,11 +17,25 @@ class Exercises {
   }
 
   getExerciseById({ id }) {
-    return this.exercises.filter(exercise => exercise.id === parseInt(id))
+    const exercise = this.exercises.filter(exercise => exercise.id === parseInt(id))
+
+    if (!exercise.length) throw new Error('Exercise not found!')
+
+    return exercise
   }
 
-  addExercise({ name, movementId, type }) {
-    if (!name) throw new Error('Name is missing')
+  getExercisesByAttributes({ name, movementId, type }) {
+    const exercise = this.exercises.reduce((prev, curr) => {
+      if (matchAttributes(curr, { name, movementId, type })) prev.push(curr)
+
+      return prev
+    }, [])
+
+    return exercise
+  }
+
+  async addExercise({ name, movementId, type }) {
+    if (!name) throw new Error('Name is missing!')
 
     const id = this.exercises.length ? Math.max(...this.exercises.map(exercise => exercise.id)) + 1 : 1
 
@@ -26,10 +43,55 @@ class Exercises {
 
     this.exercises = [...this.exercises, newExercise]
 
-    return this.exercises
+    try {
+      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
+    } catch (err) {
+      throw new Error(`Error updating database!`)
+    }
+
+    return newExercise
   }
 
-  updateExercise({ id, name, movementId, type }) {}
+  async updateExercise({ id, name, movementId, type }) {
+    if (!id) throw new Error('ID is missing!')
+    if (!name) throw new Error('Name is missing!')
+
+    this.exercises = this.exercises.map(exercise => {
+      if (exercise.id === id) {
+        name ? (exercise.name = name) : null
+        movementId ? (exercise.movementId = movementId) : null
+        type ? (exercise.type = type) : null
+
+        return exercise
+      }
+
+      return exercise
+    })
+
+    try {
+      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
+    } catch (err) {
+      throw new Error(`Error updating database!`)
+    }
+
+    return 'Item updated success!'
+  }
+
+  async deleteExercise({ id }) {
+    if (!id) throw new Error('ID is missing!')
+
+    if (!this.exercises.some(exercise => exercise.id === id)) throw new Error('Exercise Not Found!')
+
+    this.exercises = this.exercises.filter(exercise => exercise.id !== id)
+
+    try {
+      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
+    } catch (err) {
+      throw new Error(`Error updating database!`)
+    }
+
+    return 'Item deleted success!'
+  }
 }
 
 export default Exercises
