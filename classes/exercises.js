@@ -1,35 +1,25 @@
-import fs from 'node:fs/promises'
 import exercisesData from '../data/exercises.json' assert { type: 'json' }
-
-import { matchAttributes } from '../utils/index.js'
+import { matchAttributes, updateFile } from '../utils/index.js'
 
 class Exercises {
   constructor() {
     this.exercises = exercisesData
   }
 
-  getExercises({ limit }) {
-    const exercises = this.exercises
+  getExercises({ limit, name, movementId, type }) {
+    const exercises = this.exercises.reduce((prev, curr) => {
+      if (matchAttributes(curr, { name, movementId, type })) prev.push(curr)
 
-    if (limit) limit < exercises.length ? (exercises.length = limit) : null
+      return prev
+    }, [])
 
-    return this.exercises
+    return limit ? exercises.slice(0, limit) : exercises
   }
 
   getExerciseById({ id }) {
     const exercise = this.exercises.filter(exercise => exercise.id === parseInt(id))
 
     if (!exercise.length) throw new Error('Exercise not found!')
-
-    return exercise
-  }
-
-  getExercisesByAttributes({ name, movementId, type }) {
-    const exercise = this.exercises.reduce((prev, curr) => {
-      if (matchAttributes(curr, { name, movementId, type })) prev.push(curr)
-
-      return prev
-    }, [])
 
     return exercise
   }
@@ -43,11 +33,7 @@ class Exercises {
 
     this.exercises = [...this.exercises, newExercise]
 
-    try {
-      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
-    } catch (err) {
-      throw new Error(`Error updating database!`)
-    }
+    await updateFile('./data/exercises.json', this.exercises)
 
     return newExercise
   }
@@ -68,11 +54,7 @@ class Exercises {
       return exercise
     })
 
-    try {
-      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
-    } catch (err) {
-      throw new Error(`Error updating database!`)
-    }
+    await updateFile('./data/exercises.json', this.exercises)
 
     return 'Item updated success!'
   }
@@ -84,11 +66,7 @@ class Exercises {
 
     this.exercises = this.exercises.filter(exercise => exercise.id !== id)
 
-    try {
-      await fs.writeFile('./data/exercises.json', JSON.stringify(this.exercises))
-    } catch (err) {
-      throw new Error(`Error updating database!`)
-    }
+    await updateFile('./data/exercises.json', this.exercises)
 
     return 'Item deleted success!'
   }
