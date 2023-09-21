@@ -1,3 +1,3 @@
-import { getExercises, getExerciseById, addExercises, updateExercise, deleteExercise } from './exercises.js'
+import exercisesRouter from './exercises.router.js'
 
-export { getExercises, getExerciseById, addExercises, updateExercise, deleteExercise }
+export { exercisesRouter }
