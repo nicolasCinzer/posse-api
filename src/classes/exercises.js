@@ -1,6 +1,8 @@
 import exercisesData from '../data/exercises.json' assert { type: 'json' }
 import { matchAttributes, updateFile } from '../utils/index.js'
 
+const PATH = './data/exercises.json'
+
 class Exercises {
   constructor() {
     this.exercises = exercisesData
@@ -33,7 +35,7 @@ class Exercises {
 
     this.exercises = [...this.exercises, newExercise]
 
-    await updateFile('./data/exercises.json', this.exercises)
+    await updateFile(PATH, this.exercises)
 
     return newExercise
   }
@@ -54,7 +56,7 @@ class Exercises {
       return exercise
     })
 
-    await updateFile('./data/exercises.json', this.exercises)
+    await updateFile(PATH, this.exercises)
 
     return 'Item updated success!'
   }
@@ -66,7 +68,7 @@ class Exercises {
 
     this.exercises = this.exercises.filter(exercise => exercise.id !== id)
 
-    await updateFile('./data/exercises.json', this.exercises)
+    await updateFile(PATH, this.exercises)
 
     return 'Item deleted success!'
   }
