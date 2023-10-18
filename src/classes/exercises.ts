@@ -4,12 +4,14 @@ import { matchAttributes, updateFile } from '../utils/index.js'
 const PATH = './data/exercises.json'
 
 class Exercises {
+  exercises: Exercise[] = []
+
   constructor() {
-    this.exercises = exercisesData
+    this.exercises = exercisesData as Exercise[]
   }
 
-  getExercises({ limit, name, movementId, type }) {
-    const exercises = this.exercises.reduce((prev, curr) => {
+  getExercises(limit: number, { name, movementId, type }: ExerciseNOID): Exercise[] {
+    const exercises = this.exercises.reduce((prev: Exercise[], curr: Exercise) => {
       if (matchAttributes(curr, { name, movementId, type })) prev.push(curr)
 
       return prev
@@ -18,7 +20,7 @@ class Exercises {
     return limit ? exercises.slice(0, limit) : exercises
   }
 
-  getExerciseById({ id }) {
+  getExerciseById(id: string): Exercise[] | Error {
     const exercise = this.exercises.filter(exercise => exercise.id === parseInt(id))
 
     if (!exercise.length) throw new Error('Exercise not found!')
@@ -26,12 +28,12 @@ class Exercises {
     return exercise
   }
 
-  async addExercise({ name, movementId, type }) {
+  async addExercise({ name, movementId, type }: ExerciseNOID): Promise<Exercise | Error> {
     if (!name) throw new Error('Name is missing!')
 
     const id = this.exercises.length ? Math.max(...this.exercises.map(exercise => exercise.id)) + 1 : 1
 
-    const newExercise = { id, name, movementId, type }
+    const newExercise: Exercise = { id, name, movementId, type }
 
     this.exercises = [...this.exercises, newExercise]
 
@@ -40,8 +42,7 @@ class Exercises {
     return newExercise
   }
 
-  async updateExercise({ id, name, movementId, type }) {
-    if (!id) throw new Error('ID is missing!')
+  async updateExercise({ id, name, movementId, type }: Partial<Exercise> & { id: number }): Promise<string | Error> {
     if (!name) throw new Error('Name is missing!')
 
     this.exercises = this.exercises.map(exercise => {
@@ -61,7 +62,7 @@ class Exercises {
     return 'Item updated success!'
   }
 
-  async deleteExercise({ id }) {
+  async deleteExercise(id: number): Promise<string | Error> {
     if (!id) throw new Error('ID is missing!')
 
     if (!this.exercises.some(exercise => exercise.id === id)) throw new Error('Exercise Not Found!')
