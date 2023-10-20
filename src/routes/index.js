@@ -1,3 +1,8 @@
+import { Router } from 'express'
 import exercisesRouter from './exercises.router.js'
 
-export { exercisesRouter }
+const router = Router()
+
+router.use('/api/', exercisesRouter)
+
+export default router

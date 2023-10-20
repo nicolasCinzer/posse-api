@@ -1,13 +1,14 @@
 import express from 'express'
-import { exercisesRouter } from './routes/index.js'
+import './db/configDB'
+import mainRouter from './routes/index.js'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.static('public'))
 
-// Routes
-app.use('/api/exercises', exercisesRouter)
+// Router
+app.use('/', mainRouter)
 
 const PORT = 8080
 app.listen(PORT, () => {
