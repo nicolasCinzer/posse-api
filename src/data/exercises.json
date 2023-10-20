@@ -1,5 +1,0 @@
-[
-  { "id": 1, "name": "Squat", "movementId": 1, "type": "Basic" },
-  { "id": 2, "name": "Bench Press", "movementId": 2, "type": "Basic" },
-  { "id": 3, "name": "Deadlift", "movementId": 3, "type": "Basic" }
-]
