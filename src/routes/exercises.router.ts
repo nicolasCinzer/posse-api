@@ -3,14 +3,14 @@ import { getExercises, getExerciseById, addExercises, updateExercise, deleteExer
 
 const router = Router()
 
-router.get('/', getExercises)
+router.get('/exercises', getExercises)
 
-router.get('/:id', getExerciseById)
+router.get('/exercises/:id', getExerciseById)
 
-router.post('/', addExercises)
+router.post('/exercises', addExercises)
 
-router.put('/', updateExercise)
+router.put('/exercises', updateExercise)
 
-router.delete('/', deleteExercise)
+router.delete('/exercises', deleteExercise)
 
 export default router

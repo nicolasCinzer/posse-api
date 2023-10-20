@@ -1,4 +1,4 @@
-import { Exercises } from '../classes/index.js'
+import { Exercises } from '../services/index.js'
 
 const exercisesManager = new Exercises()
 
